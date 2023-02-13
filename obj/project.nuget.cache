@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZuUaWOf4oaGUtmiQ91tqukEbfIuCbuXAG19D5jeic6x0RPAoGxKyz069bdXXoqozuepiuKxJPNA6gwnA+40HMg==",
+  "dgSpecHash": "+AVnY95h1QwQgEjiogd82EB4a6+N2kjltXLsCGmVnWAT0YNvYmYyCwrnVH6YseqjVNUkHHmdAwPnJ5cTq9yVAg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\ChessEngine.csproj",
+  "projectFilePath": "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\ChessEngine.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

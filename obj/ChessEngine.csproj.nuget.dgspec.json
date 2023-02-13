@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\ChessEngine.csproj": {}
+    "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\ChessEngine.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\ChessEngine.csproj": {
+    "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\ChessEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\ChessEngine.csproj",
+        "projectUniqueName": "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\ChessEngine.csproj",
         "projectName": "ChessEngine",
-        "projectPath": "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\ChessEngine.csproj",
+        "projectPath": "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\ChessEngine.csproj",
         "packagesPath": "C:\\Users\\Miguel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Miguel\\Documents\\Projects\\ChessEngine\\obj\\",
+        "outputPath": "C:\\Users\\Miguel\\RiderProjects\\ChessEngine\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Miguel\\AppData\\Roaming\\NuGet\\NuGet.Config"
