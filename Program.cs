@@ -4,10 +4,8 @@ internal abstract class Program
 {
     private static void Main()
     {
-        var bbc = new Bbc();
-        // init leaper piece attacks
-        bbc.InitLeapersAttacks();
-
-        Console.WriteLine(bbc.GenerateMagicNumber());
+        Position pos = new Position();
+        Bitboard whitePawns = pos.bitboards[0]; // get the bitboard for white pawns
+        pos.bitboards[2] = new Bitboard(0b0000000000000000000000000000000000000000000000000000000000000000); // set the bitboard for white rooks to zero
     }
 }
