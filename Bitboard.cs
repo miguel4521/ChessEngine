@@ -24,7 +24,8 @@ public class Bitboard
             // Check if the square is valid
             if (square < 0 || square > 63)
                 throw new ArgumentOutOfRangeException(nameof(square));
-            // Return the bit at the square
+
+                // Return the bit at the square
             return (bits & (1UL << square)) != 0;
         }
         set
@@ -188,15 +189,5 @@ public class Bitboard
     public override int GetHashCode()
     {
         return bits.GetHashCode();
-    }
-
-    public void printBitboard()
-    {
-        for (int i = 0; i < 64; i++)
-        {
-            if (i % 8 == 0)
-                Console.WriteLine();
-            Console.Write(this[i] ? "1" : "0");
-        }
     }
 }
