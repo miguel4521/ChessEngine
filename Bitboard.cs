@@ -3,7 +3,7 @@
 public class Bitboard
 {
     // The 64-bit integer that stores the bitboard
-    private ulong bits;
+    protected ulong bits;
 
     // The constructor that takes a 64-bit integer as an argument
     public Bitboard(ulong bits)
@@ -25,7 +25,7 @@ public class Bitboard
             if (square < 0 || square > 63)
                 throw new ArgumentOutOfRangeException(nameof(square));
 
-                // Return the bit at the square
+            // Return the bit at the square
             return (bits & (1UL << square)) != 0;
         }
         set
@@ -162,7 +162,7 @@ public class Bitboard
     }
 
     // The right shift operator that returns a bitboard shifted right by a given number of bits
-    public static Bitboard operator >>(Bitboard a, int n)
+    public static Bitboard operator >> (Bitboard a, int n)
     {
         return new Bitboard(a.bits >> n);
     }
@@ -189,5 +189,35 @@ public class Bitboard
     public override int GetHashCode()
     {
         return bits.GetHashCode();
+    }
+}
+
+public abstract class Piece : Bitboard
+{
+    public bool IsWhite { get; set; }
+    public abstract List<Move> GenerateMoves(ulong emptySquares);
+}
+
+public class Pawn : Piece
+{
+    public Pawn(bool isWhite)
+    {
+        IsWhite = isWhite;
+        bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
+    }
+
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        List<Move> moves = new List<Move>(); // A list to store the generated moves
+        if (IsWhite)
+        {
+            ulong singleStep = (bits << 8) & emptySquares; // The single step moves
+            ulong doubleStep =
+                (bits << 16) & emptySquares &
+                (singleStep << 8); // Shift two ranks up and intersect with empty squares and single-step moves
+            
+        }
+
+        return moves;
     }
 }
