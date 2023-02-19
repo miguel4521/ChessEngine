@@ -1,4 +1,6 @@
-﻿namespace ChessEngine;
+﻿using System.Numerics;
+
+namespace ChessEngine;
 
 public class Bitboard
 {
@@ -59,20 +61,7 @@ public class Bitboard
     // The method that returns the index of the least significant bit set in the bitboard
     public int LSB()
     {
-        // Check if the bitboard is not empty
-        if (bits == 0)
-            throw new InvalidOperationException("The bitboard is empty.");
-
-            /*
-             * Use the bit scan forward algorithm
-             * https://arxiv.org/pdf/1611.07612.pdf
-             */
-        bits ^= bits - 1;
-        bits = (bits & 0x5555555555555555UL) + ((bits >> 1) & 0x5555555555555555UL);
-        bits = (bits & 0x3333333333333333UL) + ((bits >> 2) & 0x3333333333333333UL);
-        bits = (bits + (bits >> 4)) & 0x0F0F0F0F0F0F0F0FUL;
-        bits = (bits * 0x0101010101010101UL) >> 56;
-        return (int)bits;
+        return BitOperations.TrailingZeroCount(bits);
     }
 
     // The method that clears the least significant bit set in the bitboard
@@ -220,7 +209,7 @@ public class Pawn : Piece
                     new Bitboard((bits << 16) & emptySquares &
                                  (singleStep <<
                                   8)); // Shift two ranks up and intersect with empty squares and single-step moves
-
+            
             while (singleStep != 0) // While there are single-step moves available
             {
                 int to = singleStep.LSB(); // Get the index of the least significant bit set to 1
