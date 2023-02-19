@@ -61,14 +61,12 @@ public class Bitboard
     {
         // Check if the bitboard is not empty
         if (bits == 0)
-        {
             throw new InvalidOperationException("The bitboard is empty.");
-        }
 
-        /*
-         * Use the bit scan forward algorithm
-         * https://arxiv.org/pdf/1611.07612.pdf
-         */
+            /*
+             * Use the bit scan forward algorithm
+             * https://arxiv.org/pdf/1611.07612.pdf
+             */
         bits ^= bits - 1;
         bits = (bits & 0x5555555555555555UL) + ((bits >> 1) & 0x5555555555555555UL);
         bits = (bits & 0x3333333333333333UL) + ((bits >> 2) & 0x3333333333333333UL);
@@ -82,11 +80,9 @@ public class Bitboard
     {
         // Check if the bitboard is not empty
         if (bits == 0)
-        {
             throw new InvalidOperationException("The bitboard is empty.");
-        }
 
-        // Clear the least significant bit
+            // Clear the least significant bit
         bits &= bits - 1;
     }
 
@@ -117,6 +113,11 @@ public class Bitboard
 
         // Return the string
         return sb.ToString();
+    }
+    
+    public Bitboard GetEmptySquares()
+    {
+        return new Bitboard(~bits);
     }
 
     // The implicit conversion operator that converts a bitboard to a 64-bit integer
@@ -209,15 +210,73 @@ public class Pawn : Piece
     public override List<Move> GenerateMoves(ulong emptySquares)
     {
         List<Move> moves = new List<Move>(); // A list to store the generated moves
-        if (IsWhite)
+        if (IsWhite) // If the pawn is white
         {
-            ulong singleStep = (bits << 8) & emptySquares; // The single step moves
-            ulong doubleStep =
-                (bits << 16) & emptySquares &
-                (singleStep << 8); // Shift two ranks up and intersect with empty squares and single-step moves
-            
+            Bitboard
+                singleStep =
+                    new Bitboard((bits << 8) & emptySquares); // Shift one rank up and intersect with empty squares
+            Bitboard
+                doubleStep =
+                    new Bitboard((bits << 16) & emptySquares &
+                                 (singleStep <<
+                                  8)); // Shift two ranks up and intersect with empty squares and single-step moves
+
+            while (singleStep != 0) // While there are single-step moves available
+            {
+                int to = singleStep.LSB(); // Get the index of the least significant bit set to 1
+                int from = to - 8; // Get the index of where the pawn came from
+
+                if ((to & 0x38) == 0x38) // If it is a promotion move (the last rank)
+                    moves.Add(new Move(from, to)); // Add a quiet promotion move to the list
+                else
+                    moves.Add(new Move(from, to)); // Add a quiet move to the list
+
+                singleStep &= singleStep - 1; // Clear the least significant bit set to 1
+            }
+
+            while (doubleStep != 0) // While there are double-step moves available 
+            {
+                int to = doubleStep.LSB(); // Get the index of the least significant bit set to 1 
+                int from = to - 16; // Get the index of where the pawn came from
+
+                moves.Add(new Move(from, to)); // Add a double pawn push move to list
+
+                doubleStep &= doubleStep - 1; // Clear teh least significant bit set ot 1 
+            }
+        }
+        else
+        {
+            Bitboard singleStep = new Bitboard((bits >> 8) & emptySquares);
+            Bitboard doubleStep = new Bitboard((bits >> 16) & emptySquares & (singleStep >> 8));
+
+            while (singleStep != 0)
+            {
+                int to = singleStep.LSB();
+                int from = to + 8;
+
+                if ((to & 0x07) == 0x07)
+                {
+                    moves.Add(new Move(from, to));
+                }
+                else
+                {
+                    moves.Add(new Move(from, to));
+                }
+
+                singleStep &= singleStep - 1;
+            }
+
+            while (doubleStep != 0)
+            {
+                int to = doubleStep.LSB();
+                int from = to + 16;
+
+                moves.Add(new Move(from, to));
+
+                doubleStep &= doubleStep - 1;
+            }
         }
 
-        return moves;
+        return moves; // Return the list of moves 
     }
 }
