@@ -71,7 +71,7 @@ public class Bitboard
         if (bits == 0)
             throw new InvalidOperationException("The bitboard is empty.");
 
-            // Clear the least significant bit
+        // Clear the least significant bit
         bits &= bits - 1;
     }
 
@@ -103,7 +103,7 @@ public class Bitboard
         // Return the string
         return sb.ToString();
     }
-    
+
     public Bitboard GetEmptySquares()
     {
         return new Bitboard(~bits);
@@ -209,7 +209,7 @@ public class Pawn : Piece
                     new Bitboard((bits << 16) & emptySquares &
                                  (singleStep <<
                                   8)); // Shift two ranks up and intersect with empty squares and single-step moves
-            
+
             while (singleStep != 0) // While there are single-step moves available
             {
                 int to = singleStep.LSB(); // Get the index of the least significant bit set to 1
@@ -244,13 +244,9 @@ public class Pawn : Piece
                 int from = to + 8;
 
                 if ((to & 0x07) == 0x07)
-                {
                     moves.Add(new Move(from, to));
-                }
                 else
-                {
                     moves.Add(new Move(from, to));
-                }
 
                 singleStep &= singleStep - 1;
             }
@@ -267,5 +263,19 @@ public class Pawn : Piece
         }
 
         return moves; // Return the list of moves 
+    }
+}
+
+public class Bishop : Piece
+{
+    public Bishop(bool isWhite)
+    {
+        IsWhite = isWhite;
+        bits = isWhite ? 0x0000000000000024UL : 0x2400000000000000UL;
+    }
+
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        return null;
     }
 }
