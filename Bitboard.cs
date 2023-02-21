@@ -266,6 +266,20 @@ public class Pawn : Piece
     }
 }
 
+public class Knight : Piece
+{
+    public Knight(bool isWhite)
+    {
+        isWhite = isWhite;
+        bits = isWhite ? 0x0000000000000042UL : 0x4200000000000000UL;
+    }
+    
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        return null;
+    }
+}
+
 public class Bishop : Piece
 {
     public Bishop(bool isWhite)
@@ -274,6 +288,48 @@ public class Bishop : Piece
         bits = isWhite ? 0x0000000000000024UL : 0x2400000000000000UL;
     }
 
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        return null;
+    }
+}
+
+public class Rook : Piece
+{
+    public Rook(bool isWhite)
+    {
+        IsWhite = isWhite;
+        bits = isWhite ? 0x0000000000000081UL : 0x8100000000000000UL;
+    }
+
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        return null;
+    }
+}
+
+public class Queen : Piece
+{
+    public Queen(bool isWhite)
+    {
+        IsWhite = isWhite;
+        bits = isWhite ? 0x0000000000000008UL : 0x0800000000000000UL;
+    }
+    
+    public override List<Move> GenerateMoves(ulong emptySquares)
+    {
+        return null;
+    }
+}
+
+public class King : Piece
+{
+    public King(bool isWhite)
+    {
+        IsWhite = isWhite;
+        bits = isWhite ? 0x0000000000000010UL : 0x1000000000000000UL;
+    }
+    
     public override List<Move> GenerateMoves(ulong emptySquares)
     {
         return null;
