@@ -8,7 +8,7 @@ public class Knight : Piece
         bits = isWhite ? 0x0000000000000042UL : 0x4200000000000000UL;
     }
     
-    public override List<Move> GenerateMoves(ulong emptySquares)
+    public override List<Move> GenerateMoves(Bitboard emptySquares)
     {
         return null;
     }

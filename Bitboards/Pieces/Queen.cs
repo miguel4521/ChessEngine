@@ -8,7 +8,7 @@ public class Queen : Piece
         bits = isWhite ? 0x0000000000000008UL : 0x0800000000000000UL;
     }
     
-    public override List<Move> GenerateMoves(ulong emptySquares)
+    public override List<Move> GenerateMoves(Bitboard emptySquares)
     {
         return null;
     }

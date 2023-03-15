@@ -8,7 +8,7 @@ public class Pawn : Piece
         bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
     }
 
-    public override List<Move> GenerateMoves(ulong emptySquares)
+    public override List<Move> GenerateMoves(Bitboard emptySquares)
     {
         List<Move> moves = new List<Move>(); // A list to store the generated moves
         if (IsWhite) // If the pawn is white

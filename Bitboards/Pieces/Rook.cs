@@ -8,7 +8,7 @@ public class Rook : Piece
         bits = isWhite ? 0x0000000000000081UL : 0x8100000000000000UL;
     }
 
-    public override List<Move> GenerateMoves(ulong emptySquares)
+    public override List<Move> GenerateMoves(Bitboard emptySquares)
     {
         return null;
     }
