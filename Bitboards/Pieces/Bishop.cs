@@ -333,11 +333,11 @@ public class Bishop : Piece
         occupancy &= BishopMasks[square];
         occupancy *= BishopMagics[square];
         occupancy >>= 64 - BishopRelevantBits[square];
-        
+
         // return bishop attacks
         return BishopAttacks[square, occupancy];
     }
-    
+
     public Bishop(bool isWhite)
     {
         IsWhite = isWhite;
@@ -347,27 +347,29 @@ public class Bishop : Piece
     public override List<Move> GenerateMoves(Position position)
     {
         InitSlidersAttacks();
-        Bitboard attacks = GetBishopAttacks(18, position.GetWhitePieces()) & ~position.GetEmptySquares();
-        Console.WriteLine(attacks.ToString());
-        
-        /*List<Move> moves = new List<Move>();
-        
-        Bitboard bishops = this;
+        List<Move> moves = new List<Move>();
+        int startSquare = LSB();
+        Bitboard bishopAttacks =
+            GetBishopAttacks(startSquare, ~position.GetEmptySquares()) & ~position.GetWhitePieces();
 
-        while (bishops != 0)
+        Bitboard captures = bishopAttacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
+        Bitboard nonCaptures = bishopAttacks & ~captures;
+
+        while (captures != 0)
         {
-            int square = LSB();
-            attacks = GetBishopAttacks(square, emptySquares) & ~emptySquares;
-            while (attacks != 0)
-            {
-                int to = attacks.LSB();
-                moves.Add(new Move(square, to));
-                attacks &= attacks - 1;
-            }
-            bishops &= bishops - 1;
+            int captureSquare = captures.LSB();
+            moves.Add(new Move(startSquare, captureSquare));
+            captures ^= (1UL << captureSquare);
         }
-        return moves;*/
 
-        return null;
+        Console.WriteLine(nonCaptures.ToString());
+        while (nonCaptures != 0)
+        {
+            int nonCaptureSquare = nonCaptures.LSB();
+            moves.Add(new Move(startSquare, nonCaptureSquare));
+            nonCaptures ^= (1UL << nonCaptureSquare);
+        }
+
+        return moves;
     }
 }
