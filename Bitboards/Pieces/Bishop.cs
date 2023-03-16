@@ -217,7 +217,7 @@ public class Bishop : Piece
     }
 
 
-    ulong FindMagicNumber(int square, int relevantBits)
+    private ulong FindMagicNumber(int square, int relevantBits)
     {
         // init occupancies
         ulong[] occupancies = new ulong[4096];
@@ -295,7 +295,7 @@ public class Bishop : Piece
     }
 
     // init slider piece's attack tables
-    void InitSlidersAttacks()
+    private void InitSlidersAttacks()
     {
         // loop over 64 board squares
         for (int square = 0; square < 64; square++)
@@ -327,7 +327,7 @@ public class Bishop : Piece
         }
     }
 
-    Bitboard GetBishopAttacks(int square, Bitboard occupancy)
+    private Bitboard GetBishopAttacks(int square, Bitboard occupancy)
     {
         // get bishop attacks assuming current board occupancy
         occupancy &= BishopMasks[square];
@@ -337,28 +337,36 @@ public class Bishop : Piece
         // return bishop attacks
         return BishopAttacks[square, occupancy];
     }
-
-    // init magic numbers
-    void InitMagicNumbers()
-    {
-        // loop over 64 board squares
-        for (int square = 0; square < 64; square++)
-            // init bishop magic numbers
-            BishopMagics[square] = FindMagicNumber(square, BishopRelevantBits[square]);
-    }
-
-
+    
     public Bishop(bool isWhite)
     {
         IsWhite = isWhite;
         bits = isWhite ? 0x0000000000000024UL : 0x2400000000000000UL;
     }
 
-    public override List<Move> GenerateMoves(Bitboard emptySquares)
+    public override List<Move> GenerateMoves(Position position)
     {
         InitSlidersAttacks();
-        Bitboard attacks = GetBishopAttacks(30, emptySquares) & ~emptySquares;
+        Bitboard attacks = GetBishopAttacks(18, position.GetWhitePieces()) & ~position.GetEmptySquares();
         Console.WriteLine(attacks.ToString());
+        
+        /*List<Move> moves = new List<Move>();
+        
+        Bitboard bishops = this;
+
+        while (bishops != 0)
+        {
+            int square = LSB();
+            attacks = GetBishopAttacks(square, emptySquares) & ~emptySquares;
+            while (attacks != 0)
+            {
+                int to = attacks.LSB();
+                moves.Add(new Move(square, to));
+                attacks &= attacks - 1;
+            }
+            bishops &= bishops - 1;
+        }
+        return moves;*/
 
         return null;
     }

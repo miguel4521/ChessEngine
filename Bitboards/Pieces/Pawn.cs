@@ -8,17 +8,17 @@ public class Pawn : Piece
         bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
     }
 
-    public override List<Move> GenerateMoves(Bitboard emptySquares)
+    public override List<Move> GenerateMoves(Position position)
     {
         List<Move> moves = new List<Move>(); // A list to store the generated moves
         if (IsWhite) // If the pawn is white
         {
             Bitboard
                 singleStep =
-                    new Bitboard((bits << 8) & emptySquares); // Shift one rank up and intersect with empty squares
+                    new Bitboard((bits << 8) & position.GetEmptySquares()); // Shift one rank up and intersect with empty squares
             Bitboard
                 doubleStep =
-                    new Bitboard((bits << 16) & emptySquares &
+                    new Bitboard((bits << 16) & position.GetEmptySquares() &
                                  (singleStep <<
                                   8)); // Shift two ranks up and intersect with empty squares and single-step moves
 
@@ -47,8 +47,8 @@ public class Pawn : Piece
         }
         else
         {
-            Bitboard singleStep = new Bitboard((bits >> 8) & emptySquares);
-            Bitboard doubleStep = new Bitboard((bits >> 16) & emptySquares & (singleStep >> 8));
+            Bitboard singleStep = new Bitboard((bits >> 8) & position.GetEmptySquares());
+            Bitboard doubleStep = new Bitboard((bits >> 16) & position.GetEmptySquares() & (singleStep >> 8));
 
             while (singleStep != 0)
             {
