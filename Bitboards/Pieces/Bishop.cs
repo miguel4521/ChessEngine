@@ -88,7 +88,7 @@ public class Bishop : Piece
 
     private static readonly Bitboard[,] BishopAttacks = new Bitboard[64, 512];
 
-    private Bitboard MaskBishopAttacks(int square)
+    private static Bitboard MaskBishopAttacks(int square)
     {
         // result attacks bitboard
         ulong attacks = 0UL;
@@ -110,7 +110,7 @@ public class Bishop : Piece
         return attacks;
     }
 
-    private Bitboard BishopAttacksOnTheFly(int square, Bitboard block)
+    private static Bitboard BishopAttacksOnTheFly(int square, Bitboard block)
     {
         // result attacks bitboard
         ulong attacks = 0UL;
@@ -150,152 +150,9 @@ public class Bishop : Piece
         // return attack map
         return attacks;
     }
-
-    private Bitboard SetOccupancy(int index, int bitsInMask, Bitboard attackMask)
-    {
-        // occupancy map
-        ulong occupancy = 0UL;
-
-        // loop over the range of bits within attack mask
-        for (int count = 0; count < bitsInMask; count++)
-        {
-            // get LS1B index of attacks mask
-            int square = attackMask.LSB();
-
-            // pop LS1B in attack map
-            attackMask &= attackMask - 1;
-
-            // make sure occupancy is on board
-            if ((index & (1 << count)) != 0)
-                // populate occupancy map
-                occupancy |= (1UL << square);
-        }
-
-        // return occupancy map
-        return occupancy;
-    }
-
-    private uint randomState = 1804289383;
-
-    private uint GetRandomU32Number()
-    {
-        // get current state
-        uint number = randomState;
-
-        // XOR shift algorithm
-        number ^= number << 13;
-        number ^= number >> 17;
-        number ^= number << 5;
-
-        // update random number state
-        randomState = number;
-
-        // return random number
-        return number;
-    }
-
-
-    private ulong GetRandomU64Number()
-    {
-        // define 4 random numbers
-        ulong n1, n2, n3, n4;
-
-        // init random numbers slicing 16 bits from MS1B side
-        n1 = (ulong)(GetRandomU32Number()) & 0xFFFF;
-        n2 = (ulong)(GetRandomU32Number()) & 0xFFFF;
-        n3 = (ulong)(GetRandomU32Number()) & 0xFFFF;
-        n4 = (ulong)(GetRandomU32Number()) & 0xFFFF;
-
-        // return random number
-        return n1 | (n2 << 16) | (n3 << 32) | (n4 << 48);
-    }
-
-    // generate magic number candidate
-    Bitboard GenerateMagicNumber()
-    {
-        return GetRandomU64Number() & GetRandomU64Number() & GetRandomU64Number();
-    }
-
-
-    private ulong FindMagicNumber(int square, int relevantBits)
-    {
-        // init occupancies
-        ulong[] occupancies = new ulong[4096];
-
-        // init attack tables
-        ulong[] attacks = new ulong[4096];
-
-        // init used attacks
-        ulong[] usedAttacks = new ulong[4096];
-
-        // init attack mask for a current piece
-        ulong attackMask = MaskBishopAttacks(square);
-
-        // init occupancy indices
-        int occupancyIndices = 1 << relevantBits;
-
-        // loop over occupancy indices
-        for (int index = 0; index < occupancyIndices; index++)
-        {
-            // init occupancies
-            occupancies[index] = SetOccupancy(index, relevantBits, attackMask);
-
-            // init attacks
-            attacks[index] = BishopAttacksOnTheFly(square, occupancies[index]);
-        }
-
-        // test magic numbers loop
-        for (int randomCount = 0; randomCount < 100000000; randomCount++)
-        {
-            // generate magic number candidate
-            ulong magicNumber = GenerateMagicNumber();
-
-            // skip inappropriate magic numbers
-            Bitboard test = (attackMask * magicNumber) & 0xFF00000000000000UL;
-            if (test.Count() < 6) continue;
-
-            // init used attacks
-            Array.Clear(usedAttacks, 0, usedAttacks.Length);
-
-            // init index & fail flag
-            int index;
-            bool fail;
-
-            // test magic index loop
-            for (index = 0, fail = false; !fail && index < occupancyIndices; index++)
-            {
-                // init magic index
-                int magicIndex = (int)((occupancies[index] * magicNumber) >> (64 - relevantBits));
-
-                // if magic index works
-                if (usedAttacks[magicIndex] == 0UL)
-                {
-                    // init used attacks
-                    usedAttacks[magicIndex] = attacks[index];
-                }
-                // otherwise
-                else if (usedAttacks[magicIndex] != attacks[index])
-                {
-                    // magic index doesn't work
-                    fail = true;
-                }
-            }
-
-            // if magic number works
-            if (!fail)
-            {
-                // return it
-                return magicNumber;
-            }
-        }
-
-        // if magic number doesn't work
-        Console.WriteLine("  Magic number fails!");
-        return 0UL;
-    }
-
+    
     // init slider piece's attack tables
-    private void InitSlidersAttacks()
+    public static void InitBishopAttacks()
     {
         // loop over 64 board squares
         for (int square = 0; square < 64; square++)
@@ -346,7 +203,6 @@ public class Bishop : Piece
 
     public override List<Move> GenerateMoves(Position position)
     {
-        InitSlidersAttacks();
         List<Move> moves = new List<Move>();
         int startSquare = LSB();
         Bitboard bishopAttacks =
