@@ -47,15 +47,15 @@ public class Bitboard
     // The method that returns the number of bits set in the bitboard
     public int Count()
     {
-        /*
-         * Use the population count algorithm
-         * https://arxiv.org/pdf/1611.07612.pdf
-         */
-        bits -= (bits >> 1) & 0x5555555555555555UL;
-        bits = (bits & 0x3333333333333333UL) + ((bits >> 2) & 0x3333333333333333UL);
-        bits = (bits + (bits >> 4)) & 0x0F0F0F0F0F0F0F0FUL;
-        bits = (bits * 0x0101010101010101UL) >> 56;
-        return (int)bits;
+        int count = 0;
+        Bitboard n = this;
+        while (n > 0)
+        {
+            if ((n & 1) == 1)
+                count++;
+            n >>= 1;
+        }
+        return count;
     }
 
     // The method that returns the index of the least significant bit set in the bitboard
