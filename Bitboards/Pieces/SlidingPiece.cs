@@ -178,7 +178,7 @@ public abstract class SlidingPiece : Piece
     private static Bitboard SetOccupancy(int index, int bitsInMask, Bitboard attackMask)
     {
         // occupancy map
-        ulong occupancy = 0UL;
+        Bitboard occupancy = 0UL;
 
         // loop over the range of bits within attack mask
         for (int count = 0; count < bitsInMask; count++)
@@ -202,7 +202,7 @@ public abstract class SlidingPiece : Piece
     private static Bitboard MaskBishopAttacks(int square)
     {
         // result attacks bitboard
-        ulong attacks = 0UL;
+        Bitboard attacks = 0UL;
 
         // init ranks & files
         int r, f;
@@ -224,7 +224,7 @@ public abstract class SlidingPiece : Piece
     private static Bitboard BishopAttacksOnTheFly(int square, Bitboard block)
     {
         // result attacks bitboard
-        ulong attacks = 0UL;
+        Bitboard attacks = 0UL;
 
         // init ranks & files
         int r, f;
