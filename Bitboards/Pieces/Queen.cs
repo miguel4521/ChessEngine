@@ -18,10 +18,9 @@ public class Queen : SlidingPiece
         Bitboard bishopAttacks =
             GetBishopAttacks(startSquare, position.GetOccupiedSquares()) & ~position.GetWhitePieces();
        
+        // Queen is just a combination of a bishop and a rook
         Bitboard attacks = rookAttacks | bishopAttacks;
         
-        Console.WriteLine(attacks.ToString());
-
         Bitboard captures = attacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
         Bitboard nonCaptures = attacks & ~captures;
 
