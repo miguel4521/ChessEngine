@@ -6,9 +6,26 @@ public class Bitboard
 {
     // The 64-bit integer that stores the bitboard
     protected ulong bits;
+    
+    protected static readonly Bitboard NotAFile = 0xFEFEFEFEFEFEFEFEUL;
+    protected static readonly Bitboard NotHFile = 0x7F7F7F7F7F7F7F7FUL;
+    protected static readonly Bitboard NotABFile = 0xFCFCFCFCFCFCFCFCUL;
+    protected static readonly Bitboard NotGHFile = 0x3F3F3F3F3F3F3F3FUL;
+
+    public enum Squares
+    {
+        A1, B1, C1, D1, E1, F1, G1, H1,
+        A2, B2, C2, D2, E2, F2, G2, H2,
+        A3, B3, C3, D3, E3, F3, G3, H3,
+        A4, B4, C4, D4, E4, F4, G4, H4,
+        A5, B5, C5, D5, E5, F5, G5, H5,
+        A6, B6, C6, D6, E6, F6, G6, H6,
+        A7, B7, C7, D7, E7, F7, G7, H7,
+        A8, B8, C8, D8, E8, F8, G8, H8
+    }
 
     // The constructor that takes a 64-bit integer as an argument
-    public Bitboard(ulong bits)
+    private Bitboard(ulong bits)
     {
         this.bits = bits;
     }
@@ -38,7 +55,7 @@ public class Bitboard
 
             // Set or clear the bit at the square
             if (value)
-                bits |= (1UL << square);
+                bits |= 1UL << square;
             else
                 bits &= ~(1UL << square);
         }
@@ -47,15 +64,15 @@ public class Bitboard
     // The method that returns the number of bits set in the bitboard
     public int Count()
     {
-        /*
-         * Use the population count algorithm
-         * https://arxiv.org/pdf/1611.07612.pdf
-         */
-        bits -= (bits >> 1) & 0x5555555555555555UL;
-        bits = (bits & 0x3333333333333333UL) + ((bits >> 2) & 0x3333333333333333UL);
-        bits = (bits + (bits >> 4)) & 0x0F0F0F0F0F0F0F0FUL;
-        bits = (bits * 0x0101010101010101UL) >> 56;
-        return (int)bits;
+        int count = 0;
+        Bitboard n = this;
+        while (n > 0)
+        {
+            if ((n & 1) == 1)
+                count++;
+            n >>= 1;
+        }
+        return count;
     }
 
     // The method that returns the index of the least significant bit set in the bitboard
@@ -179,103 +196,5 @@ public class Bitboard
     public override int GetHashCode()
     {
         return bits.GetHashCode();
-    }
-}
-
-public abstract class Piece : Bitboard
-{
-    public bool IsWhite { get; set; }
-    public abstract List<Move> GenerateMoves(ulong emptySquares);
-}
-
-public class Pawn : Piece
-{
-    public Pawn(bool isWhite)
-    {
-        IsWhite = isWhite;
-        bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
-    }
-
-    public override List<Move> GenerateMoves(ulong emptySquares)
-    {
-        List<Move> moves = new List<Move>(); // A list to store the generated moves
-        if (IsWhite) // If the pawn is white
-        {
-            Bitboard
-                singleStep =
-                    new Bitboard((bits << 8) & emptySquares); // Shift one rank up and intersect with empty squares
-            Bitboard
-                doubleStep =
-                    new Bitboard((bits << 16) & emptySquares &
-                                 (singleStep <<
-                                  8)); // Shift two ranks up and intersect with empty squares and single-step moves
-
-            while (singleStep != 0) // While there are single-step moves available
-            {
-                int to = singleStep.LSB(); // Get the index of the least significant bit set to 1
-                int from = to - 8; // Get the index of where the pawn came from
-
-                if ((to & 0x38) == 0x38) // If it is a promotion move (the last rank)
-                    moves.Add(new Move(from, to)); // Add a quiet promotion move to the list
-                else
-                    moves.Add(new Move(from, to)); // Add a quiet move to the list
-
-                singleStep &= singleStep - 1; // Clear the least significant bit set to 1
-            }
-
-            while (doubleStep != 0) // While there are double-step moves available 
-            {
-                int to = doubleStep.LSB(); // Get the index of the least significant bit set to 1 
-                int from = to - 16; // Get the index of where the pawn came from
-
-                moves.Add(new Move(from, to)); // Add a double pawn push move to list
-
-                doubleStep &= doubleStep - 1; // Clear teh least significant bit set ot 1 
-            }
-        }
-        else
-        {
-            Bitboard singleStep = new Bitboard((bits >> 8) & emptySquares);
-            Bitboard doubleStep = new Bitboard((bits >> 16) & emptySquares & (singleStep >> 8));
-
-            while (singleStep != 0)
-            {
-                int to = singleStep.LSB();
-                int from = to + 8;
-
-                if ((to & 0x07) == 0x07)
-                    moves.Add(new Move(from, to));
-                else
-                    moves.Add(new Move(from, to));
-
-                singleStep &= singleStep - 1;
-            }
-
-            while (doubleStep != 0)
-            {
-                int to = doubleStep.LSB();
-                int from = to + 16;
-
-                moves.Add(new Move(from, to));
-
-                doubleStep &= doubleStep - 1;
-            }
-        }
-
-        return moves; // Return the list of moves 
-    }
-}
-
-public class Bishop : Piece
-{
-    public Bishop(bool isWhite)
-    {
-        IsWhite = isWhite;
-        bits = isWhite ? 0x0000000000000024UL : 0x2400000000000000UL;
-    }
-
-    public override List<Move> GenerateMoves(ulong emptySquares)
-    {
-        return null;
     }
 }

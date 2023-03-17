@@ -1,11 +1,18 @@
-﻿namespace ChessEngine;
+﻿using ChessEngine.Bitboards.Pieces;
+
+namespace ChessEngine;
 
 internal abstract class Program
 {
     private static void Main()
     {
+        Bishop.InitBishopAttacks();
+        Rook.InitRookAttacks();
         Position pos = new Position();
-        Bitboard whitePawns = pos.bitboards[0]; // get the bitboard for white pawns
-        pos.bitboards[2] = new Bitboard(0b0000000000000000000000000000000000000000000000000000000000000000); // set the bitboard for white rooks to zero
+        List<Move> moves = pos.pieces[6].GenerateMoves(pos);
+        foreach (Move move in moves)
+        {
+            Console.WriteLine(move);
+        }
     }
 }
