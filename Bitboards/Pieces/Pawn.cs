@@ -2,9 +2,6 @@
 
 public class Pawn : Piece
 {
-    private readonly Bitboard _notAFile = 0xFEFEFEFEFEFEFEFEUL;
-    private readonly Bitboard _notHFile = 0x7F7F7F7F7F7F7F7FUL;
-
     public Pawn(bool isWhite)
     {
         IsWhite = isWhite;
@@ -25,15 +22,15 @@ public class Pawn : Piece
         if (IsWhite)
         {
             // generate pawn attacks
-            if (((bitboard >> 7) & _notAFile) != 0) attacks |= bitboard << 7;
-            if (((bitboard >> 9) & _notHFile) != 0) attacks |= bitboard << 9;
+            if (((bitboard >> 7) & NotAFile) != 0) attacks |= bitboard << 7;
+            if (((bitboard >> 9) & NotHFile) != 0) attacks |= bitboard << 9;
         }
         // black pawns
         else
         {
             // generate pawn attacks
-            if (((bitboard << 7) & _notHFile) != 0) attacks |= bitboard >> 7;
-            if (((bitboard << 9) & _notAFile) != 0) attacks |= bitboard >> 9;
+            if (((bitboard << 7) & NotHFile) != 0) attacks |= bitboard >> 7;
+            if (((bitboard << 9) & NotAFile) != 0) attacks |= bitboard >> 9;
         }
 
         // return attack map
