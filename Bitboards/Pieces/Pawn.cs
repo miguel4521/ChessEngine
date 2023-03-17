@@ -4,12 +4,13 @@ public class Pawn : Piece
 {
     private readonly Bitboard _notAFile = 0xFEFEFEFEFEFEFEFEUL;
     private readonly Bitboard _notHFile = 0x7F7F7F7F7F7F7F7FUL;
+
     public Pawn(bool isWhite)
     {
         IsWhite = isWhite;
         bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
     }
-    
+
     private Bitboard MaskPawnAttacks(int square)
     {
         // result attacks bitboard
@@ -24,24 +25,59 @@ public class Pawn : Piece
         if (IsWhite)
         {
             // generate pawn attacks
-            if (((bitboard >> 7) & _notAFile) != 0) attacks |= bitboard >> 7;
-            if (((bitboard >> 9) & _notHFile) != 0) attacks |= bitboard >> 9;
+            if (((bitboard >> 7) & _notAFile) != 0) attacks |= bitboard << 7;
+            if (((bitboard >> 9) & _notHFile) != 0) attacks |= bitboard << 9;
         }
         // black pawns
         else
         {
             // generate pawn attacks
-            if (((bitboard << 7) & _notHFile) != 0) attacks |= bitboard << 7;
-            if (((bitboard << 9) & _notAFile) != 0) attacks |= bitboard << 9;    
+            if (((bitboard << 7) & _notHFile) != 0) attacks |= bitboard >> 7;
+            if (((bitboard << 9) & _notAFile) != 0) attacks |= bitboard >> 9;
         }
-    
+
         // return attack map
         return attacks;
     }
 
     public override List<Move> GenerateMoves(Position position)
     {
+        List<Move> moves = new List<Move>(); // A list to store the generated moves
 
-        return null;
+        Bitboard enemyPieces = IsWhite ? position.GetBlackPieces() : position.GetWhitePieces();
+
+        for (int square = 0; square < 64; square++)
+        {
+            if (this[square])
+            {
+                Bitboard attacks = MaskPawnAttacks(square) & enemyPieces;
+                Bitboard captures = attacks & enemyPieces;
+
+                // Add capture moves
+                while (captures != 0)
+                {
+                    moves.Add(new Move(square, captures.LSB()));
+                    captures &= captures - 1;
+                }
+
+                // Calculate single and double pawn pushes
+                int singlePush = IsWhite ? square + 8 : square - 8;
+                int doublePush = IsWhite ? square + 16 : square - 16;
+
+                if (this[singlePush] == false && position.GetOccupiedSquares()[singlePush] == false)
+                {
+                    moves.Add(new Move(square, singlePush));
+
+                    // Check for double pawn push
+                    if ((IsWhite && square is >= 8 and <= 15) || (!IsWhite && square is >= 48 and <= 55))
+                    {
+                        if (this[doublePush] == false && position.GetOccupiedSquares()[doublePush] == false)
+                            moves.Add(new Move(square, doublePush));
+                    }
+                }
+            }
+        }
+
+        return moves; // Return the list of moves generated
     }
 }
