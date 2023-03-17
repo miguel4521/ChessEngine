@@ -13,7 +13,7 @@ public class Bishop : SlidingPiece
         List<Move> moves = new List<Move>();
         int startSquare = LSB();
         Bitboard bishopAttacks =
-            GetBishopAttacks(startSquare, ~position.GetEmptySquares()) & ~position.GetWhitePieces();
+            GetBishopAttacks(startSquare, position.GetOccupiedSquares()) & ~position.GetWhitePieces();
 
         Bitboard captures = bishopAttacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
         Bitboard nonCaptures = bishopAttacks & ~captures;

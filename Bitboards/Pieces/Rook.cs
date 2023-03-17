@@ -13,7 +13,7 @@ public class Rook : SlidingPiece
         List<Move> moves = new List<Move>();
         int startSquare = LSB();
         Bitboard rookAttacks =
-            GetRookAttacks(startSquare, ~position.GetEmptySquares()) & ~position.GetWhitePieces();
+            GetRookAttacks(startSquare, position.GetOccupiedSquares()) & ~position.GetWhitePieces();
 
         Bitboard captures = rookAttacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
         Bitboard nonCaptures = rookAttacks & ~captures;
