@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace ChessEngine;
+﻿namespace ChessEngine.Bitboards.Pieces;
 
 public class Bishop : Piece
 {
@@ -122,7 +120,7 @@ public class Bishop : Piece
         int tr = square / 8;
         int tf = square % 8;
 
-        // generate bishop atacks
+        // generate bishop attacks
         for (r = tr + 1, f = tf + 1; r <= 7 && f <= 7; r++, f++)
         {
             attacks |= (1UL << (r * 8 + f));
@@ -167,7 +165,7 @@ public class Bishop : Piece
             int relevantBitsCount = attackMask.Count();
 
             // init occupancy indices
-            int occupancyIndices = (1 << relevantBitsCount);
+            int occupancyIndices = 1 << relevantBitsCount;
 
             // loop over occupancy indices
             for (int index = 0; index < occupancyIndices; index++)
@@ -215,15 +213,14 @@ public class Bishop : Piece
         {
             int captureSquare = captures.LSB();
             moves.Add(new Move(startSquare, captureSquare));
-            captures ^= (1UL << captureSquare);
+            captures ^= 1UL << captureSquare;
         }
 
-        Console.WriteLine(nonCaptures.ToString());
         while (nonCaptures != 0)
         {
             int nonCaptureSquare = nonCaptures.LSB();
             moves.Add(new Move(startSquare, nonCaptureSquare));
-            nonCaptures ^= (1UL << nonCaptureSquare);
+            nonCaptures ^= 1UL << nonCaptureSquare;
         }
 
         return moves;

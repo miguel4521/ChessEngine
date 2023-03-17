@@ -1,4 +1,4 @@
-﻿namespace ChessEngine;
+﻿namespace ChessEngine.Bitboards.Pieces;
 
 
 public class King : Piece

@@ -1,8 +1,13 @@
-﻿namespace ChessEngine;
+﻿namespace ChessEngine.Bitboards.Pieces;
 
 public abstract class Piece : Bitboard
 {
     public bool IsWhite { get; set; }
+    
+    private static void PopBit(ref Bitboard bitboard, int square)
+    {
+        bitboard &= ~(1UL << square);
+    }
     
     protected static Bitboard SetOccupancy(int index, int bitsInMask, Bitboard attackMask)
     {
@@ -16,12 +21,12 @@ public abstract class Piece : Bitboard
             int square = attackMask.LSB();
 
             // pop LS1B in attack map
-            attackMask &= attackMask - 1;
+            PopBit(ref attackMask, square);
 
             // make sure occupancy is on board
             if ((index & (1 << count)) != 0)
                 // populate occupancy map
-                occupancy |= (1UL << square);
+                occupancy |= 1UL << square;
         }
 
         // return occupancy map

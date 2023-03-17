@@ -204,9 +204,10 @@ public class Rook : Piece
     public override List<Move> GenerateMoves(Position position)
     {
         List<Move> moves = new List<Move>();
-        int startSquare = LSB();
+        int startSquare = 25;
         Bitboard rookAttacks =
             GetRookAttacks(startSquare, ~position.GetEmptySquares()) & ~position.GetWhitePieces();
+        Console.WriteLine(rookAttacks.ToString());
 
         Bitboard captures = rookAttacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
         Bitboard nonCaptures = rookAttacks & ~captures;
@@ -224,7 +225,7 @@ public class Rook : Piece
             moves.Add(new Move(startSquare, nonCaptureSquare));
             nonCaptures ^= 1UL << nonCaptureSquare;
         }
-
+        
         return moves;    
     }
 }
