@@ -11,10 +11,9 @@ public class Rook : SlidingPiece
     public override List<Move> GenerateMoves(Position position)
     {
         List<Move> moves = new List<Move>();
-        int startSquare = 25;
+        int startSquare = LSB();
         Bitboard rookAttacks =
             GetRookAttacks(startSquare, ~position.GetEmptySquares()) & ~position.GetWhitePieces();
-        Console.WriteLine(rookAttacks.ToString());
 
         Bitboard captures = rookAttacks & (IsWhite ? position.GetBlackPieces() : position.GetWhitePieces());
         Bitboard nonCaptures = rookAttacks & ~captures;
