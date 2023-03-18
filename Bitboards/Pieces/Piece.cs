@@ -2,7 +2,9 @@
 
 public abstract class Piece : Bitboard
 {
-    protected bool IsWhite { get; init; }
+    public bool IsWhite { get; set; }
     
     public abstract List<Move> GenerateMoves(Position position);
+    
+    public abstract char GetSymbol();
 }

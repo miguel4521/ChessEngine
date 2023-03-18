@@ -5,7 +5,6 @@ public class Queen : SlidingPiece
     public Queen(bool isWhite)
     {
         IsWhite = isWhite;
-        bits = isWhite ? 0x0000000000000008UL : 0x0800000000000000UL;
     }
 
     public override List<Move> GenerateMoves(Position position)
@@ -39,5 +38,10 @@ public class Queen : SlidingPiece
         }
 
         return moves;
+    }
+    
+    public override char GetSymbol()
+    {
+        return IsWhite ? 'q' : 'Q';
     }
 }

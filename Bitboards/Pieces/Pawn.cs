@@ -5,7 +5,6 @@ public class Pawn : Piece
     public Pawn(bool isWhite)
     {
         IsWhite = isWhite;
-        bits = isWhite ? 0x000000000000FF00UL : 0x00FF000000000000UL;
     }
 
     private Bitboard MaskPawnAttacks(int square)
@@ -17,7 +16,7 @@ public class Pawn : Piece
         Bitboard bitboard = 0UL;
 
         bitboard[square] = true;
-
+        
         // white pawns
         if (IsWhite)
         {
@@ -76,5 +75,10 @@ public class Pawn : Piece
         }
 
         return moves; // Return the list of moves generated
+    }
+    
+    public override char GetSymbol()
+    {
+        return IsWhite ? 'p' : 'P';
     }
 }

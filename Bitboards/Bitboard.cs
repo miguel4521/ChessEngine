@@ -75,6 +75,11 @@ public class Bitboard
         return count;
     }
 
+    public void Clear()
+    {
+        bits = 0UL;
+    }
+
     // The method that returns the index of the least significant bit set in the bitboard
     public int LSB()
     {
