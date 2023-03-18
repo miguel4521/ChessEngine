@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace ChessEngine;
+namespace ChessEngine.Bitboards;
 
 public class Bitboard
 {
