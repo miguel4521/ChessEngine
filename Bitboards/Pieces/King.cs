@@ -48,7 +48,7 @@ public class King : Piece
                 // Add normal moves and captures
                 while (validMoves != 0)
                 {
-                    moves.Add(new Move(square, validMoves.LSB()));
+                    moves.Add(new Move(square, validMoves.LSB(), position));
                     validMoves &= validMoves - 1;
                 }
             }

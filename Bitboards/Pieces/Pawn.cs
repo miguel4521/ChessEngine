@@ -53,7 +53,7 @@ public class Pawn : Piece
                 // Add capture moves
                 while (captures != 0)
                 {
-                    moves.Add(new Move(square, captures.LSB()));
+                    moves.Add(new Move(square, captures.LSB(), position));
                     captures &= captures - 1;
                 }
 
@@ -63,13 +63,13 @@ public class Pawn : Piece
 
                 if (this[singlePush] == false && position.GetOccupiedSquares()[singlePush] == false)
                 {
-                    moves.Add(new Move(square, singlePush));
+                    moves.Add(new Move(square, singlePush, position));
 
                     // Check for double pawn push
                     if ((IsWhite && square is >= 8 and <= 15) || (!IsWhite && square is >= 48 and <= 55))
                     {
                         if (this[doublePush] == false && position.GetOccupiedSquares()[doublePush] == false)
-                            moves.Add(new Move(square, doublePush));
+                            moves.Add(new Move(square, doublePush, position));
                     }
                 }
             }
