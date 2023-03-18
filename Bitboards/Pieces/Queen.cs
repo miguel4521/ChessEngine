@@ -27,14 +27,14 @@ public class Queen : SlidingPiece
         while (captures != 0)
         {
             int captureSquare = captures.LSB();
-            moves.Add(new Move(startSquare, captureSquare));
+            moves.Add(new Move(startSquare, captureSquare, position));
             captures ^= 1UL << captureSquare;
         }
 
         while (nonCaptures != 0)
         {
             int nonCaptureSquare = nonCaptures.LSB();
-            moves.Add(new Move(startSquare, nonCaptureSquare));
+            moves.Add(new Move(startSquare, nonCaptureSquare, position));
             nonCaptures ^= 1UL << nonCaptureSquare;
         }
 
