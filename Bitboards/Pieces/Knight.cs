@@ -5,7 +5,6 @@ public class Knight : Piece
     public Knight(bool isWhite)
     {
         IsWhite = isWhite;
-        bits = isWhite ? 0x0000000000000042UL : 0x4200000000000000UL;
     }
 
     // generate knight attacks
@@ -55,5 +54,10 @@ public class Knight : Piece
         }
 
         return moves; // Return the list of moves generated
+    }
+    
+    public override char GetSymbol()
+    {
+        return IsWhite ? 'n' : 'N';
     }
 }

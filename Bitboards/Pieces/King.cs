@@ -5,7 +5,6 @@ public class King : Piece
     public King(bool isWhite)
     {
         IsWhite = isWhite;
-        bits = isWhite ? 0x0000000000000010UL : 0x1000000000000000UL;
     }
 
     // generate king attacks
@@ -55,5 +54,10 @@ public class King : Piece
         }
 
         return moves; // Return the list of moves generated
+    }
+    
+    public override char GetSymbol()
+    {
+        return IsWhite ? 'k' : 'K';
     }
 }
